@@ -1,5 +1,5 @@
 {
-  "name": "react-native-combobox",
+  "name": "react-native-customisable-combobox",
   "version": "1.0.0",
   "description": "A simple react native combobox",
   "main": "dist/Combobox.js",
@@ -17,5 +17,10 @@
     "@types/react": "^18.3.4",
     "@types/react-native": "^0.73.0",
     "typescript": "^5.5.4"
-  }
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "combobox"
+  ]
 }
