@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
-    "lib": ["dom", "es2015"],
+    "lib": ["es6", "dom"],
     "jsx": "react",
+    "moduleResolution": "node",
     "declaration": true,
-    "outDir": "./dist",
+    "declarationDir": "dist",
+    "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "skipLibCheck": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "lib", "**/*.test.ts"]
 }

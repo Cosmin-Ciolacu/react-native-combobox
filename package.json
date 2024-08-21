@@ -13,12 +13,8 @@
     "type": "git",
     "url": "https://github.com/Cosmin-Ciolacu/react-native-combobox"
   },
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-native": "^0.75.2"
-  },
   "devDependencies": {
-    "@types/react": "^18.3.3",
+    "@types/react": "^18.3.4",
     "@types/react-native": "^0.73.0",
     "typescript": "^5.5.4"
   }
