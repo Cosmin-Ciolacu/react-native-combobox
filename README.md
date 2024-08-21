@@ -1,6 +1,27 @@
 # Combobox Component
 
 A customizable combobox component for React Native.
+It works with both static and dynamic data, and it supports search functionality.
+it works with both bared and managed workflow(Expo).
+it is written in TypeScript.
+
+## Features
+
+- **Customizable**: You can customize the combobox with your own styles and render functions.
+- **Searchable**: You can enable search functionality to filter items.
+- **Dynamic Data**: You can use dynamic data to populate the combobox.
+- **Keyboard Avoiding**: The combobox avoids the keyboard when active.
+- **Common Configuration**: You can configure common properties like styles, focus, and blur events.
+- **Dynamic Configuration**: You can configure dynamic properties like label and value fields.
+- **Searchable Configuration**: You can configure searchable properties like search field, search placeholder, and search icon.
+- **Searchable Callbacks**: You can use callbacks for non-existent items and custom rendering.
+- **Searchable Items**: You can show a specific item when there is no search input.
+- **Searchable No Results**: You can show a custom item when no search results are found.
+- **Searchable Always Show**: You can always show a specific item when there is no search input.
+
+## Demo
+
+![Combobox Demo](https://user-images.githubusercontent.com/26859947/134760073-3b3b3b7b-3b7b-4b7b-8b7b-3b7b3b7b3b7b.gif)
 
 ## Installation
 
@@ -47,25 +68,26 @@ export default App;
 
 ## Props
 
-| **Property**             | **Type**                                                                  | **Description**                                                         | **Optional**                                 | **Configuration**                            |
-| ------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------- | -------------------------------------------- | --------------- | ------- |
-| `items`                  | `Array<T>` / `Array<string                                                | number>`                                                                | The list of items displayed in the combobox. | No                                           | Common, Dynamic |
-| `style`                  | `ViewStyle`                                                               | Custom styles for the combobox container.                               | Yes                                          | Common                                       |
-| `itemStyle`              | `ViewStyle`                                                               | Custom styles for each item in the list.                                | Yes                                          | Common                                       |
-| `selectedStyle`          | `ViewStyle`                                                               | Custom styles for the selected item.                                    | Yes                                          | Common                                       |
-| `value`                  | `T`                                                                       | The currently selected value.                                           | No                                           | Common                                       |
-| `onFocus`                | `() => void`                                                              | Callback triggered when the combobox gains focus.                       | Yes                                          | Common                                       |
-| `onBlur`                 | `() => void`                                                              | Callback triggered when the combobox loses focus.                       | Yes                                          | Common                                       |
-| `keyboardAvoiding`       | `boolean`                                                                 | If true, the combobox avoids the keyboard when active.                  | Yes                                          | Common                                       |
-| `labelField`             | `keyof T` / `never`                                                       | The key in the item object for the label value.                         | No / N/A                                     | Dynamic                                      |
-| `valueField`             | `keyof T` / `never`                                                       | The key in the item object for the value.                               | No / N/A                                     | Dynamic                                      |
-| `renderItem`             | `({ item, selected }: { item: T; selected: boolean }) => React.ReactNode` | Custom function to render each item.                                    | Yes                                          | Dynamic                                      |
-| `onChange`               | `(value: T                                                                | string                                                                  | number) => void`                             | Callback triggered when an item is selected. | No              | Dynamic |
-| `searchable`             | `true / false`                                                            | Enables or disables search functionality.                               | No                                           | Searchable                                   |
-| `searchField`            | `keyof T` / `never`                                                       | The key in the item object for searching.                               | No / N/A                                     | Searchable                                   |
-| `searchPlaceholder`      | `string`                                                                  | Placeholder text for the search input.                                  | Yes                                          | Searchable (searchable: true)                |
-| `renderSearchIcon`       | `() => React.ReactNode`                                                   | Custom function to render a search icon.                                | Yes                                          | Searchable (searchable: true)                |
-| `showItemOnNoSearch`     | `boolean`                                                                 | Shows all items if there is no search input.                            | Yes                                          | Searchable (searchable: true)                |
-| `showAlwaysNoSearchItem` | `boolean`                                                                 | Always shows a specific item when there is no search input.             | Yes                                          | Searchable (searchable: true)                |
-| `renderNoSearchItem`     | `(value: string) => React.ReactNode`                                      | Custom function to render an item when no search results are found.     | Yes                                          | Searchable (searchable: true)                |
-| `onSelectedNotFoundItem` | `(value: string) => void`                                                 | Callback triggered when a non-existent item is selected after a search. | Yes                                          | Searchable (searchable: true)                |
+| **Property**              | **Type**                                                                                         | **Description**                                                                                               | **Optional** | **Configuration**               |
+|---------------------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|--------------|---------------------------------|
+| `items`                   | `Array<T>` / `Array<string \| number>`                                                           | The list of items displayed in the combobox.                                                                  | No           | Common, Dynamic                 |
+| `style`                   | `ViewStyle`                                                                                      | Custom styles for the combobox container.                                                                     | Yes          | Common                          |
+| `itemStyle`               | `ViewStyle`                                                                                      | Custom styles for each item in the list.                                                                      | Yes          | Common                          |
+| `selectedStyle`           | `ViewStyle`                                                                                      | Custom styles for the selected item.                                                                          | Yes          | Common                          |
+| `value`                   | `T`                                                                                              | The currently selected value.                                                                                 | No           | Common                          |
+| `onFocus`                 | `() => void`                                                                                     | Callback triggered when the combobox gains focus.                                                             | Yes          | Common                          |
+| `onBlur`                  | `() => void`                                                                                     | Callback triggered when the combobox loses focus.                                                             | Yes          | Common                          |
+| `keyboardAvoiding`        | `boolean`                                                                                        | If true, the combobox avoids the keyboard when active.                                                        | Yes          | Common                          |
+| `labelField`              | `keyof T` / `never`                                                                              | The key in the item object for the label value.                                                               | No / N/A     | Dynamic                         |
+| `valueField`              | `keyof T` / `never`                                                                              | The key in the item object for the value.                                                                     | No / N/A     | Dynamic                         |
+| `renderItem`              | `({ item, selected }: { item: T; selected: boolean }) => React.ReactNode`                        | Custom function to render each item.                                                                          | Yes          | Dynamic                         |
+| `onChange`                | `(value: T \| string \| number) => void`                                                         | Callback triggered when an item is selected.                                                                  | No           | Dynamic                         |
+| `searchable`              | `true / false`                                                                                   | Enables or disables search functionality.                                                                     | No           | Searchable                      |
+| `searchField`             | `keyof T` / `never`                                                                              | The key in the item object for searching.                                                                     | No / N/A     | Searchable                      |
+| `searchPlaceholder`       | `string`                                                                                        | Placeholder text for the search input.                                                                        | Yes          | Searchable (searchable: true)   |
+| `renderSearchIcon`        | `() => React.ReactNode`                                                                          | Custom function to render a search icon.                                                                      | Yes          | Searchable (searchable: true)   |
+| `showItemOnNoSearch`      | `boolean`                                                                                        | Shows all items if there is no search input.                                                                  | Yes          | Searchable (searchable: true)   |
+| `showAlwaysNoSearchItem`  | `boolean`                                                                                        | Always shows a specific item when there is no search input.                                                   | Yes          | Searchable (searchable: true)   |
+| `renderNoSearchItem`      | `(value: string) => React.ReactNode`                                                             | Custom function to render an item when no search results are found.                                           | Yes          | Searchable (searchable: true)   |
+| `onSelectedNotFoundItem`  | `(value: string) => void`                                                                        | Callback triggered when a non-existent item is selected after a search.                                       | Yes          | Searchable (searchable: true)   |
+| `onRenderNotFoundItem`    | `(value: string) => React.ReactNode`                                                             | Custom function to render a non-existent item.                                                                | Yes          | Searchable (searchable: true)   |
