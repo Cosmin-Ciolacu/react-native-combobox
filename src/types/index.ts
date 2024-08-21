@@ -5,7 +5,10 @@ type CommonComboboxProps<T> = {
   style?: ViewStyle;
   itemStyle?: ViewStyle;
   selectedStyle?: ViewStyle;
-  value: T;
+  showBorder?: boolean;
+  containerRadius?: number;
+  dropdownStyle?: ViewStyle;
+  value: T | null | undefined;
   onFocus?: () => void;
   onBlur?: () => void;
   keyboardAvoiding?: boolean;

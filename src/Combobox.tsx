@@ -33,10 +33,13 @@ export function Combobox<T extends unknown>({
   renderNoSearchItem,
   renderSearchIcon,
   onSelectedNotFoundItem,
+  containerRadius,
+  showBorder,
+  dropdownStyle,
 }: ComboboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState<T | null>(value);
+  const [selected, setSelected] = useState<T | null | undefined>(value);
   const [focus, setFocus] = useState(false);
   const [dropdownTop, setDropdownTop] = useState(0);
   const containerRef = useRef<View>(null);
@@ -164,7 +167,14 @@ export function Combobox<T extends unknown>({
     >
       <Pressable
         ref={containerRef}
-        style={[style, styles.container]}
+        style={[
+          style,
+          styles.container,
+          showBorder && styles.border,
+          {
+            borderRadius: containerRadius || 5,
+          },
+        ]}
         onPress={handleOpen}
       >
         <Pressable
@@ -198,9 +208,10 @@ export function Combobox<T extends unknown>({
         {open && (
           <View
             style={[
+              dropdownStyle,
               styles.dropdown,
               {
-                top: dropdownTop,
+                top: dropdownTop + 10,
               },
             ]}
           >
@@ -238,9 +249,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
+  },
+  border: {
     borderWidth: 1,
     borderColor: "black",
-    borderRadius: 5,
   },
   focus: {
     borderColor: "blue",
