@@ -1,0 +1,21 @@
+{
+  "name": "react-native-combobox",
+  "version": "1.0.0",
+  "description": "A simple react native combobox",
+  "main": "dist/Combobox.js",
+  "types": "dist/Combobox.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Cosmin Ciolacu",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-native": "^0.75.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-native": "^0.73.0",
+    "typescript": "^5.5.4"
+  }
+}
