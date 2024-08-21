@@ -34,7 +34,7 @@ npm i react-native-customisable-combobox
 ```jsx
 import React from "react";
 import { View } from "react-native";
-import { Combobox } from "./path/to/Combobox";
+import { Combobox } from "react-native-customisable-combobox";
 
 const items = [
   { label: "Item 1", value: "item1" },
