@@ -21,7 +21,7 @@ it is written in TypeScript.
 
 ## Demo
 
-![Combobox Demo](https://github.com/Cosmin-Ciolacu/react-native-combobox/demo.gif)
+![Combobox Demo](https://github.com/Cosmin-Ciolacu/react-native-combobox/blob/main/demo.gif)
 
 ## Installation
 
