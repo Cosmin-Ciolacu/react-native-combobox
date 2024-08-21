@@ -25,10 +25,8 @@ it is written in TypeScript.
 
 ## Installation
 
-To use this component, you need to have `react`, `react-native`, and `typescript` installed in your project.
-
 ```sh
-npm install react react-native typescript
+npm i react-native-customisable-combobox
 ```
 
 ## Usage
