@@ -1,5 +1,12 @@
 import React, { Key, useEffect, useMemo, useRef, useState } from "react";
-import { View, Text, Pressable, TextInput, Platform } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  Platform,
+  ScrollView,
+} from "react-native";
 import DownIcon from "../src/components/Icons/DownIcon";
 import CloseIcon from "../src/components/Icons/CloseIcon";
 import { ComboboxProps } from "./types";
@@ -182,8 +189,10 @@ export function Combobox<T extends unknown>({
           },
         ]}
         onPress={handleOpen}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       >
-        <Pressable
+        <View
           style={[
             focus && styles.focus,
             {
@@ -192,8 +201,6 @@ export function Combobox<T extends unknown>({
               alignItems: "center",
             },
           ]}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
         >
           {searchable ? (
             <View style={{ flex: 1, flexDirection: "row" }}>
@@ -210,7 +217,7 @@ export function Combobox<T extends unknown>({
               <Text>{searchValue}</Text>
             </View>
           )}
-        </Pressable>
+        </View>
         {!open ? (
           <DownIcon size={18} />
         ) : (
@@ -234,7 +241,7 @@ export function Combobox<T extends unknown>({
             },
           ]}
         >
-          {renderItems()}
+          <ScrollView style={{ maxHeight: 200 }}>{renderItems()}</ScrollView>
           {showAlwaysNoSearchItem && (
             <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
               {renderNoSearchItem ? (
