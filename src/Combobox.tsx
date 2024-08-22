@@ -11,6 +11,7 @@ import {
 import DownIcon from "../src/components/Icons/DownIcon";
 import CloseIcon from "../src/components/Icons/CloseIcon";
 import { ComboboxProps } from "./types";
+import { styles } from "./styles";
 
 export function Combobox<T extends unknown>({
   items,
@@ -23,11 +24,10 @@ export function Combobox<T extends unknown>({
   selectedStyle,
   value,
   onChange,
-  searchable,
+  searchable = false,
   searchPlaceholder,
   onFocus,
   onBlur,
-  keyboardAvoiding,
   showItemOnNoSearch,
   showAlwaysNoSearchItem = false,
   renderNoSearchItem,
@@ -161,10 +161,7 @@ export function Combobox<T extends unknown>({
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      enabled={keyboardAvoiding}
-    >
+    <View style={open && Platform.OS === "ios" ? { zIndex: 999 } : {}}>
       <Pressable
         ref={containerRef}
         style={[
@@ -205,31 +202,6 @@ export function Combobox<T extends unknown>({
             </View>
           )}
         </Pressable>
-        {open && (
-          <View
-            style={[
-              dropdownStyle,
-              styles.dropdown,
-              {
-                top: dropdownTop + 10,
-              },
-            ]}
-          >
-            {renderItems()}
-            {showAlwaysNoSearchItem && (
-              <Pressable
-                style={styles.item}
-                onPress={handleSelectedNotFoundItem}
-              >
-                {renderNoSearchItem ? (
-                  renderNoSearchItem(search)
-                ) : (
-                  <Text>{search}</Text>
-                )}
-              </Pressable>
-            )}
-          </View>
-        )}
         {!open ? (
           <DownIcon size={18} />
         ) : (
@@ -238,50 +210,28 @@ export function Combobox<T extends unknown>({
           </Pressable>
         )}
       </Pressable>
-    </KeyboardAvoidingView>
+      {open && (
+        <View
+          style={[
+            dropdownStyle,
+            styles.dropdown,
+            {
+              marginTop: dropdownTop + 10,
+            },
+          ]}
+        >
+          {renderItems()}
+          {showAlwaysNoSearchItem && (
+            <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
+              {renderNoSearchItem ? (
+                renderNoSearchItem(search)
+              ) : (
+                <Text>{search}</Text>
+              )}
+            </Pressable>
+          )}
+        </View>
+      )}
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-  },
-  border: {
-    borderWidth: 1,
-    borderColor: "black",
-  },
-  focus: {
-    borderColor: "blue",
-  },
-  dropdown: {
-    // flex: 1,
-    position: "absolute",
-    left: 0,
-    right: 0,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-    zIndex: 100,
-  },
-  searchContainer: {
-    padding: 10,
-  },
-  search: {
-    width: "100%",
-    height: "100%",
-    outlineStyle: "none",
-    marginLeft: 10,
-  },
-
-  item: {
-    padding: 10,
-  },
-  noSearchItem: {
-    padding: 10,
-  },
-});

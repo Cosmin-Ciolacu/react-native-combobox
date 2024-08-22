@@ -11,7 +11,6 @@ type CommonComboboxProps<T> = {
   value: T | null | undefined;
   onFocus?: () => void;
   onBlur?: () => void;
-  keyboardAvoiding?: boolean;
 };
 
 type DynamicComboboxProps<T> =
