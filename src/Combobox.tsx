@@ -120,8 +120,9 @@ export function Combobox<T extends unknown>({
 
     if (filteredItems.length === 0) {
       return (
-        <View style={styles.noSearchItem}>
-          {!showItemOnNoSearch && !showAlwaysNoSearchItem ? (
+        !showItemOnNoSearch && (
+          <View style={styles.noSearchItem}>
+            {/* {!showItemOnNoSearch && showAlwaysNoSearchItem ? (
             <Text>No items found</Text>
           ) : (
             <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
@@ -131,8 +132,10 @@ export function Combobox<T extends unknown>({
                 <Text>{search}</Text>
               )}
             </Pressable>
-          )}
-        </View>
+          )} */}
+            <Text>No items found</Text>
+          </View>
+        )
       );
     }
 
