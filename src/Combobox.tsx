@@ -161,7 +161,12 @@ export function Combobox<T extends unknown>({
   };
 
   return (
-    <View style={open && Platform.OS === "ios" ? { zIndex: 999 } : {}}>
+    <View
+      style={[
+        { position: "relative" },
+        open && Platform.OS === "ios" ? { zIndex: 999 } : {},
+      ]}
+    >
       <Pressable
         ref={containerRef}
         style={[
