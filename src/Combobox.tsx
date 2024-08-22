@@ -1,47 +1,41 @@
 import React, { Key, useEffect, useMemo, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  TextInput,
-  Platform,
-} from "react-native";
+import { View, Text, Pressable, TextInput, Platform } from "react-native";
 import DownIcon from "../src/components/Icons/DownIcon";
 import CloseIcon from "../src/components/Icons/CloseIcon";
 import { ComboboxProps } from "./types";
 import { styles } from "./styles";
 
 export function Combobox<T extends unknown>({
-                                              items,
-                                              renderItem,
-                                              labelField,
-                                              valueField,
-                                              searchField,
-                                              style,
-                                              itemStyle,
-                                              selectedStyle,
-                                              value,
-                                              onChange,
-                                              searchable = false,
-                                              searchPlaceholder,
-                                              onFocus,
-                                              onBlur,
-                                              showItemOnNoSearch,
-                                              showAlwaysNoSearchItem = false,
-                                              renderNoSearchItem,
-                                              renderSearchIcon,
-                                              onSelectedNotFoundItem,
-                                              containerRadius,
-                                              showBorder,
-                                              dropdownStyle,
-                                              label,
-                                              labelStyle,
-                                              renderLabel,
-                                              error,
-                                              errorStyle,
-                                              renderError,
-                                              mainContainerStyle,
-                                            }: ComboboxProps<T>) {
+  items,
+  renderItem,
+  labelField,
+  valueField,
+  searchField,
+  style,
+  itemStyle,
+  selectedStyle,
+  value,
+  onChange,
+  searchable = false,
+  searchPlaceholder,
+  onFocus,
+  onBlur,
+  showItemOnNoSearch,
+  showAlwaysNoSearchItem = false,
+  renderNoSearchItem,
+  renderSearchIcon,
+  onSelectedNotFoundItem,
+  containerRadius,
+  showBorder,
+  dropdownStyle,
+  label,
+  labelStyle,
+  renderLabel,
+  error,
+  errorStyle,
+  renderError,
+  mainContainerStyle,
+}: ComboboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<T | null | undefined>(value);
@@ -50,13 +44,13 @@ export function Combobox<T extends unknown>({
   const containerRef = useRef<View>(null);
 
   const searchValue = useMemo(
-      () =>
-          selected
-              ? typeof selected === "object" && labelField
-                  ? (selected[labelField] as string)
-                  : (selected as string)
-              : search,
-      [selected, search]
+    () =>
+      selected
+        ? typeof selected === "object" && labelField
+          ? (selected[labelField] as string)
+          : (selected as string)
+        : search,
+    [selected, search]
   );
 
   useEffect(() => {
@@ -105,153 +99,153 @@ export function Combobox<T extends unknown>({
 
   const renderItems = () => {
     const filteredItems = search
-        ? items.filter((item) => {
+      ? items.filter((item) => {
           if (typeof item === "object" && searchField) {
             return (
-                item &&
-                (item[searchField] as string).toLowerCase().includes(search)
+              item &&
+              (item[searchField] as string).toLowerCase().includes(search)
             );
           } else {
             return item?.toString().includes(search);
           }
         })
-        : items;
+      : items;
 
     if (filteredItems.length === 0) {
       return (
-          <View style={styles.noSearchItem}>
-            {!showItemOnNoSearch && !showAlwaysNoSearchItem ? (
-                <Text>No items found</Text>
-            ) : (
-                <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
-                  {renderNoSearchItem ? (
-                      renderNoSearchItem(search)
-                  ) : (
-                      <Text>{search}</Text>
-                  )}
-                </Pressable>
-            )}
-          </View>
+        <View style={styles.noSearchItem}>
+          {!showItemOnNoSearch && !showAlwaysNoSearchItem ? (
+            <Text>No items found</Text>
+          ) : (
+            <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
+              {renderNoSearchItem ? (
+                renderNoSearchItem(search)
+              ) : (
+                <Text>{search}</Text>
+              )}
+            </Pressable>
+          )}
+        </View>
       );
     }
 
     return filteredItems.map((item, index) => {
       const key =
-          item && typeof item === "object" && valueField
-              ? (item[valueField] as Key)
-              : index;
+        item && typeof item === "object" && valueField
+          ? (item[valueField] as Key)
+          : index;
       return (
-          <Pressable
-              key={key}
-              style={[styles.item, itemStyle, selected === item && selectedStyle]}
-              onPress={() => handleSelect(item)}
-          >
-            {renderItem ? (
-                renderItem({
-                  item,
-                  selected: selected === item,
-                })
-            ) : typeof item === "object" ? (
-                <Text>
-                  {item &&
-                      labelField &&
-                      (item[labelField] as string | number | boolean)}
-                </Text>
-            ) : (
-                <Text>{item as string | number}</Text>
-            )}
-          </Pressable>
+        <Pressable
+          key={key}
+          style={[styles.item, itemStyle, selected === item && selectedStyle]}
+          onPress={() => handleSelect(item)}
+        >
+          {renderItem ? (
+            renderItem({
+              item,
+              selected: selected === item,
+            })
+          ) : typeof item === "object" ? (
+            <Text>
+              {item &&
+                labelField &&
+                (item[labelField] as string | number | boolean)}
+            </Text>
+          ) : (
+            <Text>{item as string | number}</Text>
+          )}
+        </Pressable>
       );
     });
   };
 
   return (
-      <View
-          style={[
-            styles.mainContainer,
-            mainContainerStyle,
-            { position: "relative" },
-            open && Platform.OS === "ios" ? { zIndex: 1000 } : {},
-          ]}
+    <View
+      style={[
+        styles.mainContainer,
+        mainContainerStyle,
+        { position: "relative" },
+        open && Platform.OS === "ios" ? { zIndex: 1000 } : {},
+      ]}
+    >
+      {renderLabel
+        ? renderLabel()
+        : label && <Text style={[styles.label, labelStyle]}>{label}</Text>}
+      <Pressable
+        ref={containerRef}
+        style={[
+          style,
+          styles.container,
+          showBorder && styles.border,
+          {
+            borderRadius: containerRadius || 5,
+          },
+        ]}
+        onPress={handleOpen}
       >
-        {renderLabel
-            ? renderLabel()
-            : label && <Text style={[styles.label, labelStyle]}>{label}</Text>}
         <Pressable
-            ref={containerRef}
-            style={[
-              style,
-              styles.container,
-              showBorder && styles.border,
-              {
-                borderRadius: containerRadius || 5,
-              },
-            ]}
-            onPress={handleOpen}
+          style={[
+            focus && styles.focus,
+            {
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+            },
+          ]}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         >
-          <Pressable
-              style={[
-                focus && styles.focus,
-                {
-                  flex: 1,
-                  flexDirection: "row",
-                  alignItems: "center",
-                },
-              ]}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-          >
-            {searchable ? (
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                  {renderSearchIcon && renderSearchIcon()}
-                  <TextInput
-                      style={[styles.text, styles.search]}
-                      placeholder={searchPlaceholder}
-                      value={searchValue}
-                      onChangeText={handleSearch}
-                  />
-                </View>
-            ) : (
-                <View style={styles.text}>
-                  <Text>{searchValue}</Text>
-                </View>
-            )}
-          </Pressable>
-          {!open ? (
-              <DownIcon size={18} />
+          {searchable ? (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              {renderSearchIcon && renderSearchIcon()}
+              <TextInput
+                style={[styles.text, styles.search]}
+                placeholder={searchPlaceholder}
+                value={searchValue}
+                onChangeText={handleSearch}
+              />
+            </View>
           ) : (
-              <Pressable onPress={handleClose}>
-                <CloseIcon size={18} />
-              </Pressable>
+            <View style={styles.text}>
+              <Text>{searchValue}</Text>
+            </View>
           )}
         </Pressable>
-        {error && (
-            <Text style={[styles.error, errorStyle]}>
-              {renderError ? renderError() : error}
-            </Text>
+        {!open ? (
+          <DownIcon size={18} />
+        ) : (
+          <Pressable onPress={handleClose}>
+            <CloseIcon size={18} />
+          </Pressable>
         )}
-        {open && (
-            <View
-                style={[
-                  dropdownStyle,
-                  styles.dropdown,
-                  {
-                    marginTop: dropdownTop + 30,
-                  },
-                ]}
-            >
-              {renderItems()}
-              {showAlwaysNoSearchItem && (
-                  <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
-                    {renderNoSearchItem ? (
-                        renderNoSearchItem(search)
-                    ) : (
-                        <Text>{search}</Text>
-                    )}
-                  </Pressable>
+      </Pressable>
+      {error && (
+        <Text style={[styles.error, errorStyle]}>
+          {renderError ? renderError() : error}
+        </Text>
+      )}
+      {open && (
+        <View
+          style={[
+            dropdownStyle,
+            styles.dropdown,
+            {
+              marginTop: dropdownTop + 30,
+            },
+          ]}
+        >
+          {renderItems()}
+          {showAlwaysNoSearchItem && (
+            <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
+              {renderNoSearchItem ? (
+                renderNoSearchItem(search)
+              ) : (
+                <Text>{search}</Text>
               )}
-            </View>
-        )}
-      </View>
+            </Pressable>
+          )}
+        </View>
+      )}
+    </View>
   );
 }
