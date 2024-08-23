@@ -56,7 +56,14 @@ export function Combobox<T extends unknown>({
   const [dropdownTop, setDropdownTop] = useState(0);
   const containerRef = useRef<View>(null);
   const debouncedSearch = useDebounce(search, debounceDelay);
-  const showValue = useGetShowValue<T>({ selected, labelField, search });
+  const showValue = useGetShowValue<T>({
+    selected,
+    labelField,
+    search,
+    value,
+    setSelected,
+  });
+
   const searchedItems = useGetSearchItems<T>({
     items,
     searchField,
