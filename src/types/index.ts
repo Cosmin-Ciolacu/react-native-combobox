@@ -5,6 +5,8 @@ type CommonComboboxProps<T> = {
   mainContainerStyle?: ViewStyle;
   label?: string;
   labelStyle?: TextStyle;
+  noFoundItemText?: string;
+  noFoundItemTextStyle?: TextStyle;
   renderLabel?: () => React.ReactNode;
   error?: string;
   errorStyle?: TextStyle;

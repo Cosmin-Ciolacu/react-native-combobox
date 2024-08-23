@@ -6,6 +6,7 @@ import {
   TextInput,
   Platform,
   ScrollView,
+  FlatList,
 } from "react-native";
 import DownIcon from "../src/components/Icons/DownIcon";
 import CloseIcon from "../src/components/Icons/CloseIcon";
@@ -44,6 +45,8 @@ export function Combobox<T extends unknown>({
   renderError,
   mainContainerStyle,
   debounceDelay = 300,
+  noFoundItemText,
+  noFoundItemTextStyle,
 }: ComboboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -127,49 +130,35 @@ export function Combobox<T extends unknown>({
     handleClose();
   };
 
-  const renderItems = () => {
-    if (filteredItems.length === 0) {
-      return !showItemOnNoSearch && showAlwaysNoSearchItem ? (
-        <Text>No items found</Text>
-      ) : (
-        <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
-          {renderNoSearchItem ? (
-            renderNoSearchItem(search)
-          ) : (
-            <Text>{search}</Text>
-          )}
-        </Pressable>
-      );
-    }
-
-    return filteredItems.map((item, index) => {
-      const key =
-        item && typeof item === "object" && valueField
-          ? (item[valueField] as Key)
-          : index;
-      return (
-        <Pressable
-          key={key}
-          style={[styles.item, itemStyle, selected === item && selectedStyle]}
-          onPress={() => handleSelect(item)}
-        >
-          {renderItem ? (
-            renderItem({
-              item,
-              selected: selected === item,
-            })
-          ) : typeof item === "object" ? (
-            <Text>
-              {item &&
-                labelField &&
-                (item[labelField] as string | number | boolean)}
-            </Text>
-          ) : (
-            <Text>{item as string | number}</Text>
-          )}
-        </Pressable>
-      );
-    });
+  const renderDropdownItem = ({
+    item,
+    key,
+  }: {
+    item: T;
+    key: number | string;
+  }) => {
+    return (
+      <Pressable
+        key={key}
+        style={[styles.item, itemStyle, selected === item && selectedStyle]}
+        onPress={() => handleSelect(item)}
+      >
+        {renderItem ? (
+          renderItem({
+            item,
+            selected: selected === item,
+          })
+        ) : typeof item === "object" ? (
+          <Text>
+            {item &&
+              labelField &&
+              (item[labelField] as string | number | boolean)}
+          </Text>
+        ) : (
+          <Text>{item as string | number}</Text>
+        )}
+      </Pressable>
+    );
   };
 
   return (
@@ -247,21 +236,35 @@ export function Combobox<T extends unknown>({
             },
           ]}
         >
-          <ScrollView style={{ maxHeight: 200 }}>{renderItems()}</ScrollView>
-          {showItemOnNoSearch &&
-            showAlwaysNoSearchItem &&
-            filteredItems.length !== 0 && (
-              <Pressable
-                style={styles.item}
-                onPress={handleSelectedNotFoundItem}
-              >
-                {renderNoSearchItem ? (
-                  renderNoSearchItem(search)
-                ) : (
-                  <Text>{search}</Text>
-                )}
-              </Pressable>
-            )}
+          <FlatList
+            data={filteredItems}
+            renderItem={({ item, index }) =>
+              renderDropdownItem({ item, key: index })
+            }
+            keyExtractor={(item, index) =>
+              item && typeof item === "object" && valueField
+                ? (item[valueField] as Key).toString()
+                : index.toString()
+            }
+            style={{ maxHeight: 200 }}
+          />
+          {filteredItems.length === 0 && !showItemOnNoSearch && (
+            <Pressable style={styles.item}>
+              <Text style={[noFoundItemTextStyle]}>
+                {noFoundItemText ? noFoundItemText : "No items found"}
+              </Text>
+            </Pressable>
+          )}
+          {(showAlwaysNoSearchItem ||
+            (showItemOnNoSearch && filteredItems.length === 0)) && (
+            <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
+              {renderNoSearchItem ? (
+                renderNoSearchItem(search)
+              ) : (
+                <Text>{search}</Text>
+              )}
+            </Pressable>
+          )}
         </View>
       )}
     </View>
