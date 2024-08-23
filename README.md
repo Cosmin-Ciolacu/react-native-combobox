@@ -67,7 +67,7 @@ export default App;
 ## Props
 
 | **Property**             | **Type**                                                                  | **Description**                                                         | **Optional** | **Configuration**             |
-| ------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------ | ----------------------------- |
+| ------------------------ | ------------------------------------------------------------------------- |-------------------------------------------------------------------------| ------------ | ----------------------------- |
 | `items`                  | `Array<T>` / `Array<string \| number>`                                    | The list of items displayed in the combobox.                            | No           | Common, Dynamic               |
 | `mainContainerStyle`     | `ViewStyle`                                                               | Custom styles for the main combobox container.                          | Yes          | Common                        |
 | `label`                  | `string`                                                                  | Label for the combobox.                                                 | Yes          | Common                        |
@@ -97,3 +97,5 @@ export default App;
 | `showAlwaysNoSearchItem` | `boolean`                                                                 | Always shows a specific item when there is no search input.             | Yes          | Searchable (searchable: true) |
 | `renderNoSearchItem`     | `(value: string) => React.ReactNode`                                      | Custom function to render an item when no search results are found.     | Yes          | Searchable (searchable: true) |
 | `onSelectedNotFoundItem` | `(value: string) => void`                                                 | Callback triggered when a non-existent item is selected after a search. | Yes          | Searchable (searchable: true) |
+| `renderNotFoundItem`     | `(value: string) => React.ReactNode`                                      | Custom function to render a non-existent item.                          | Yes          | Searchable (searchable: true) |
+| `debounceDelay`          | `number`                                                                  | Delay in milliseconds for the search input. Default is 300              | Yes          | Searchable (searchable: true) |
