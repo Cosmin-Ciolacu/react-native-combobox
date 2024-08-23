@@ -48,6 +48,7 @@ export function Combobox<T extends unknown>({
   debounceDelay = 300,
   noFoundItemText,
   noFoundItemTextStyle,
+  showTextStyle,
 }: ComboboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -185,14 +186,14 @@ export function Combobox<T extends unknown>({
             <View style={{ flex: 1, flexDirection: "row" }}>
               {renderSearchIcon && renderSearchIcon()}
               <TextInput
-                style={[styles.text, styles.search]}
+                style={[styles.text, showTextStyle, styles.search]}
                 placeholder={searchPlaceholder}
                 value={showValue}
                 onChangeText={handleSearch}
               />
             </View>
           ) : (
-            <View style={styles.text}>
+            <View style={(styles.text, showTextStyle)}>
               <Text>{showValue}</Text>
             </View>
           )}
