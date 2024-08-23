@@ -21,7 +21,7 @@ it is written in TypeScript.
 
 ## Demo
 
-![Combobox Demo](https://github.com/Cosmin-Ciolacu/react-native-combobox/blob/main/demo.gif)
+![Combobox Demo](./assets/demo.gif)
 
 ## Installation
 
@@ -67,7 +67,7 @@ export default App;
 ## Props
 
 | **Property**             | **Type**                                                                  | **Description**                                                         | **Optional** | **Configuration**             |
-| ------------------------ | ------------------------------------------------------------------------- |-------------------------------------------------------------------------| ------------ | ----------------------------- |
+| ------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------ | ----------------------------- |
 | `items`                  | `Array<T>` / `Array<string \| number>`                                    | The list of items displayed in the combobox.                            | No           | Common, Dynamic               |
 | `mainContainerStyle`     | `ViewStyle`                                                               | Custom styles for the main combobox container.                          | Yes          | Common                        |
 | `label`                  | `string`                                                                  | Label for the combobox.                                                 | Yes          | Common                        |
