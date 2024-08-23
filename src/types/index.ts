@@ -2,6 +2,7 @@ import { TextStyle, ViewStyle } from "react-native";
 
 type CommonComboboxProps<T> = {
   items: Array<T>;
+  useFlatList?: boolean;
   mainContainerStyle?: ViewStyle;
   label?: string;
   labelStyle?: TextStyle;

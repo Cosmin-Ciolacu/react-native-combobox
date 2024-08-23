@@ -6,6 +6,7 @@ import {
   TextInput,
   Platform,
   FlatList,
+  ScrollView,
 } from "react-native";
 import DownIcon from "../src/components/Icons/DownIcon";
 import CloseIcon from "../src/components/Icons/CloseIcon";
@@ -49,6 +50,7 @@ export function Combobox<T extends unknown>({
   noFoundItemText,
   noFoundItemTextStyle,
   showTextStyle,
+  useFlatList = true,
 }: ComboboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -146,6 +148,33 @@ export function Combobox<T extends unknown>({
     );
   };
 
+  const renderItems = () => {
+    if (useFlatList) {
+      return (
+        <FlatList
+          data={searchedItems}
+          renderItem={({ item, index }) =>
+            renderDropdownItem({ item, key: index })
+          }
+          keyExtractor={(item, index) =>
+            item && typeof item === "object" && valueField
+              ? (item[valueField] as Key).toString()
+              : index.toString()
+          }
+          style={{ maxHeight: 200 }}
+        />
+      );
+    }
+
+    return (
+      <ScrollView style={{ maxHeight: 200 }}>
+        {searchedItems.map((item, index) =>
+          renderDropdownItem({ item, key: index })
+        )}
+      </ScrollView>
+    );
+  };
+
   return (
     <View
       style={[
@@ -221,18 +250,7 @@ export function Combobox<T extends unknown>({
             },
           ]}
         >
-          <FlatList
-            data={searchedItems}
-            renderItem={({ item, index }) =>
-              renderDropdownItem({ item, key: index })
-            }
-            keyExtractor={(item, index) =>
-              item && typeof item === "object" && valueField
-                ? (item[valueField] as Key).toString()
-                : index.toString()
-            }
-            style={{ maxHeight: 200 }}
-          />
+          {renderItems()}
           {searchedItems.length === 0 && !showItemOnNoSearch && (
             <Pressable style={styles.item}>
               <Text style={[noFoundItemTextStyle]}>
