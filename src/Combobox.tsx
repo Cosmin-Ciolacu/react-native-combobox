@@ -1,11 +1,10 @@
-import React, { Key, useEffect, useMemo, useRef, useState } from "react";
+import React, { Key, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   Pressable,
   TextInput,
   Platform,
-  ScrollView,
   FlatList,
 } from "react-native";
 import DownIcon from "../src/components/Icons/DownIcon";
@@ -13,6 +12,8 @@ import CloseIcon from "../src/components/Icons/CloseIcon";
 import { ComboboxProps } from "./types";
 import { styles } from "./styles";
 import { useDebounce } from "./hooks/useDebounce";
+import { useGetShowValue } from "./hooks/useGetShowValue";
+import { useGetSearchItems } from "./hooks/useGetSearchItems";
 
 export function Combobox<T extends unknown>({
   items,
@@ -50,22 +51,17 @@ export function Combobox<T extends unknown>({
 }: ComboboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, debounceDelay);
   const [selected, setSelected] = useState<T | null | undefined>(value);
-  const [filteredItems, setFilteredItems] = useState<T[]>(items);
   const [focus, setFocus] = useState(false);
   const [dropdownTop, setDropdownTop] = useState(0);
   const containerRef = useRef<View>(null);
-
-  const searchValue = useMemo(
-    () =>
-      selected
-        ? typeof selected === "object" && labelField
-          ? (selected[labelField] as string)
-          : (selected as string)
-        : search,
-    [selected, search]
-  );
+  const debouncedSearch = useDebounce(search, debounceDelay);
+  const showValue = useGetShowValue<T>({ selected, labelField, search });
+  const searchedItems = useGetSearchItems<T>({
+    items,
+    searchField,
+    search: debouncedSearch,
+  });
 
   useEffect(() => {
     if (containerRef.current) {
@@ -74,25 +70,6 @@ export function Combobox<T extends unknown>({
       });
     }
   }, [open]);
-
-  useEffect(() => {
-    const foundItems = debouncedSearch
-      ? items.filter((item) => {
-          if (typeof item === "object" && searchField) {
-            return (
-              item &&
-              (item[searchField] as string)
-                .toLowerCase()
-                .includes(debouncedSearch.toLowerCase())
-            );
-          } else {
-            return item?.toString().includes(debouncedSearch.toLowerCase());
-          }
-        })
-      : items;
-
-    setFilteredItems(foundItems);
-  }, [debouncedSearch, items, searchField]);
 
   const handleSelect = (item: T) => {
     setSelected(item);
@@ -203,13 +180,13 @@ export function Combobox<T extends unknown>({
               <TextInput
                 style={[styles.text, styles.search]}
                 placeholder={searchPlaceholder}
-                value={searchValue}
+                value={showValue}
                 onChangeText={handleSearch}
               />
             </View>
           ) : (
             <View style={styles.text}>
-              <Text>{searchValue}</Text>
+              <Text>{showValue}</Text>
             </View>
           )}
         </View>
@@ -237,7 +214,7 @@ export function Combobox<T extends unknown>({
           ]}
         >
           <FlatList
-            data={filteredItems}
+            data={searchedItems}
             renderItem={({ item, index }) =>
               renderDropdownItem({ item, key: index })
             }
@@ -248,7 +225,7 @@ export function Combobox<T extends unknown>({
             }
             style={{ maxHeight: 200 }}
           />
-          {filteredItems.length === 0 && !showItemOnNoSearch && (
+          {searchedItems.length === 0 && !showItemOnNoSearch && (
             <Pressable style={styles.item}>
               <Text style={[noFoundItemTextStyle]}>
                 {noFoundItemText ? noFoundItemText : "No items found"}
@@ -256,7 +233,7 @@ export function Combobox<T extends unknown>({
             </Pressable>
           )}
           {(showAlwaysNoSearchItem ||
-            (showItemOnNoSearch && filteredItems.length === 0)) && (
+            (showItemOnNoSearch && searchedItems.length === 0)) && (
             <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
               {renderNoSearchItem ? (
                 renderNoSearchItem(search)
