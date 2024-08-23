@@ -5,6 +5,10 @@ It works with both static and dynamic data, and it supports search functionality
 it works with both bared and managed workflow(Expo).
 it is written in TypeScript.
 
+## Updates and Bug Reporting 
+
+This package is continuously improving and there may be some bugs. Your feedback is invaluable in making this package better. If you encounter any issues, please report them. Regular updates will be released to fix bugs and add new features, so please ensure to keep your package up-to-date.
+
 ## Features
 
 - **Customizable**: You can customize the combobox with your own styles and render functions.
