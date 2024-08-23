@@ -11,6 +11,7 @@ import DownIcon from "../src/components/Icons/DownIcon";
 import CloseIcon from "../src/components/Icons/CloseIcon";
 import { ComboboxProps } from "./types";
 import { styles } from "./styles";
+import { useDebounce } from "./hooks/useDebounce";
 
 export function Combobox<T extends unknown>({
   items,
@@ -42,10 +43,13 @@ export function Combobox<T extends unknown>({
   errorStyle,
   renderError,
   mainContainerStyle,
+  debounceDelay = 300,
 }: ComboboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, debounceDelay);
   const [selected, setSelected] = useState<T | null | undefined>(value);
+  const [filteredItems, setFilteredItems] = useState<T[]>(items);
   const [focus, setFocus] = useState(false);
   const [dropdownTop, setDropdownTop] = useState(0);
   const containerRef = useRef<View>(null);
@@ -67,6 +71,25 @@ export function Combobox<T extends unknown>({
       });
     }
   }, [open]);
+
+  useEffect(() => {
+    const foundItems = debouncedSearch
+      ? items.filter((item) => {
+          if (typeof item === "object" && searchField) {
+            return (
+              item &&
+              (item[searchField] as string)
+                .toLowerCase()
+                .includes(debouncedSearch.toLowerCase())
+            );
+          } else {
+            return item?.toString().includes(debouncedSearch.toLowerCase());
+          }
+        })
+      : items;
+
+    setFilteredItems(foundItems);
+  }, [debouncedSearch, items, searchField]);
 
   const handleSelect = (item: T) => {
     setSelected(item);
@@ -99,43 +122,23 @@ export function Combobox<T extends unknown>({
   };
 
   const handleSelectedNotFoundItem = () => {
-    onSelectedNotFoundItem && onSelectedNotFoundItem(search);
-    setSelected(search as unknown as T);
+    onSelectedNotFoundItem && onSelectedNotFoundItem(debouncedSearch);
+    setSelected(debouncedSearch as unknown as T);
     handleClose();
   };
 
   const renderItems = () => {
-    const filteredItems = search
-      ? items.filter((item) => {
-          if (typeof item === "object" && searchField) {
-            return (
-              item &&
-              (item[searchField] as string).toLowerCase().includes(search)
-            );
-          } else {
-            return item?.toString().includes(search);
-          }
-        })
-      : items;
-
     if (filteredItems.length === 0) {
-      return (
-        !showItemOnNoSearch && (
-          <View style={styles.noSearchItem}>
-            {/* {!showItemOnNoSearch && showAlwaysNoSearchItem ? (
-            <Text>No items found</Text>
+      return !showItemOnNoSearch && showAlwaysNoSearchItem ? (
+        <Text>No items found</Text>
+      ) : (
+        <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
+          {renderNoSearchItem ? (
+            renderNoSearchItem(search)
           ) : (
-            <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
-              {renderNoSearchItem ? (
-                renderNoSearchItem(search)
-              ) : (
-                <Text>{search}</Text>
-              )}
-            </Pressable>
-          )} */}
-            <Text>No items found</Text>
-          </View>
-        )
+            <Text>{search}</Text>
+          )}
+        </Pressable>
       );
     }
 
@@ -245,15 +248,20 @@ export function Combobox<T extends unknown>({
           ]}
         >
           <ScrollView style={{ maxHeight: 200 }}>{renderItems()}</ScrollView>
-          {showAlwaysNoSearchItem && (
-            <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
-              {renderNoSearchItem ? (
-                renderNoSearchItem(search)
-              ) : (
-                <Text>{search}</Text>
-              )}
-            </Pressable>
-          )}
+          {showItemOnNoSearch &&
+            showAlwaysNoSearchItem &&
+            filteredItems.length !== 0 && (
+              <Pressable
+                style={styles.item}
+                onPress={handleSelectedNotFoundItem}
+              >
+                {renderNoSearchItem ? (
+                  renderNoSearchItem(search)
+                ) : (
+                  <Text>{search}</Text>
+                )}
+              </Pressable>
+            )}
         </View>
       )}
     </View>

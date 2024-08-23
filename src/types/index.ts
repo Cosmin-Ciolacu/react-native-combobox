@@ -58,6 +58,7 @@ type SearchableComboboxProps<T> =
       showAlwaysNoSearchItem?: boolean;
       renderNoSearchItem?: (value: string) => React.ReactNode;
       onSelectedNotFoundItem?: (value: string) => void;
+      debounceDelay?: number;
     }
   | {
       searchable: false;
@@ -68,6 +69,7 @@ type SearchableComboboxProps<T> =
       showAlwaysNoSearchItem?: never;
       renderNoSearchItem?: never;
       onSelectedNotFoundItem?: never;
+      debounceDelay?: never;
     };
 
 export type ComboboxProps<T> = CommonComboboxProps<T> &
