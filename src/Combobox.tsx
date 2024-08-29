@@ -211,7 +211,7 @@ export function Combobox<T extends unknown>({
             },
           ]}
         >
-          {searchable ? (
+          {searchable && open ? (
             <View style={{ flex: 1, flexDirection: "row" }}>
               {renderSearchIcon && renderSearchIcon()}
               <TextInput
@@ -259,7 +259,7 @@ export function Combobox<T extends unknown>({
             </Pressable>
           )}
           {(showAlwaysNoSearchItem ||
-            (showItemOnNoSearch && searchedItems.length === 0)) && (
+            (showItemOnNoSearch && debouncedSearch.length === 0)) && (
             <Pressable style={styles.item} onPress={handleSelectedNotFoundItem}>
               {renderNoSearchItem ? (
                 renderNoSearchItem(search)
