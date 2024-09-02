@@ -76,7 +76,8 @@ export function Combobox<T extends unknown>({
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.measure((x, y, width, height, pageX, pageY) => {
-        setDropdownTop(height);
+        const dropdownHeight = !isNaN(height) ? height : 0;
+        setDropdownTop(dropdownHeight);
       });
     }
   }, [open]);
