@@ -325,7 +325,7 @@ export function Combobox<T extends unknown>({
               <TextInput
                 style={[styles.text, showTextStyle, styles.search]}
                 placeholder={searchPlaceholder}
-                value={showValue}
+                defaultValue={showValue}
                 onChangeText={handleSearch}
               />
             </View>
