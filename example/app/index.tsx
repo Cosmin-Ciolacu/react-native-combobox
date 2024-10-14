@@ -69,6 +69,28 @@ export default function Index() {
         )}
         useFlatList={false}
       />
+      <Combobox<string>
+        label="Select Item"
+        style={{ width: "100%" }}
+        items={["John", "Doe", "Jane"]}
+        value="John"
+        onChange={(value) => console.log(value)}
+        showItemOnNoSearch
+        showAlwaysNoSearchItem
+        noFoundItemText="No found"
+        noFoundItemTextStyle={{ color: "red" }}
+        renderNoSearchItem={(value) => (
+          <View
+            style={{
+              padding: 5,
+              backgroundColor: "white",
+            }}
+          >
+            <Text>{value}</Text>
+          </View>
+        )}
+        useFlatList={false}
+      />
     </ScrollView>
   );
 }

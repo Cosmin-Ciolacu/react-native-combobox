@@ -11,6 +11,14 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   border: {
     borderWidth: 1,
@@ -25,17 +33,15 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
   },
   dropdown: {
-    // flex: 1,
-    left: 0,
-    right: 0,
+    flex: 1,
+    flexShrink: 1,
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 5,
-    // elevation: 50,
-    position: "absolute",
-    zIndex: 1000,
-    elevation: Platform.OS === "android" ? 50 : 0,
+    elevation: 5,
+    width: "100%",
+    // elevation: Platform.OS === "android" ? 50 : 0,
   },
   label: {
     marginBottom: 4,
@@ -56,5 +62,8 @@ export const styles = StyleSheet.create({
   },
   noSearchItem: {
     padding: 10,
+  },
+  flex1: {
+    flex: 1,
   },
 });

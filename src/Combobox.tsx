@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useRef, useState } from "react";
+import React, { Key, useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   Platform,
   FlatList,
   ScrollView,
+  Modal,
+  TouchableWithoutFeedback,
+  StatusBar,
 } from "react-native";
 import DownIcon from "../src/components/Icons/DownIcon";
 import CloseIcon from "../src/components/Icons/CloseIcon";
@@ -15,6 +18,8 @@ import { styles } from "./styles";
 import { useDebounce } from "./hooks/useDebounce";
 import { useGetShowValue } from "./hooks/useGetShowValue";
 import { useGetSearchItems } from "./hooks/useGetSearchItems";
+
+const STATUS_BAR_HEIGHT = StatusBar.currentHeight || 0;
 
 export function Combobox<T extends unknown>({
   items,
@@ -57,6 +62,12 @@ export function Combobox<T extends unknown>({
   const [selected, setSelected] = useState<T | null | undefined>(value);
   const [focus, setFocus] = useState(false);
   const [dropdownTop, setDropdownTop] = useState(0);
+  const [position, setPosition] = useState<{
+    width: number;
+    height: number;
+    top: number;
+    left: number;
+  }>({ width: 0, height: 0, top: 0, left: 0 });
   const containerRef = useRef<View>(null);
   const debouncedSearch = useDebounce(search, debounceDelay);
   const showValue = useGetShowValue<T>({
@@ -73,14 +84,30 @@ export function Combobox<T extends unknown>({
     search: debouncedSearch,
   });
 
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.measure((x, y, width, height, pageX, pageY) => {
-        const dropdownHeight = !isNaN(height) ? height : 0;
-        setDropdownTop(dropdownHeight);
+  // useEffect(() => {
+  //   if (containerRef.current) {
+  //     containerRef.current.measure((x, y, width, height, pageX, pageY) => {
+  //       const dropdownHeight = !isNaN(height) ? height : 0;
+  //       setDropdownTop(dropdownHeight);
+  //     });
+  //   }
+  // }, [open]);
+
+  const measure = () => {
+    if (containerRef && containerRef?.current) {
+      containerRef.current?.measureInWindow((x, y, width, height) => {
+        const top = height + y + 2;
+        // const bottom = y + height + 2;
+        const left = x;
+        setPosition({
+          width: Math.floor(!isNaN(width) ? width : 0),
+          top: Math.floor(!isNaN(top) ? top + STATUS_BAR_HEIGHT : 0),
+          height: Math.floor(!isNaN(height) ? height : 0),
+          left: Math.floor(!isNaN(left) ? left : 0),
+        });
       });
     }
-  }, [open]);
+  };
 
   const handleSelect = (item: T) => {
     setSelected(item);
@@ -105,10 +132,12 @@ export function Combobox<T extends unknown>({
   };
 
   const handleOpen = () => {
+    measure();
     setOpen(true);
   };
 
   const handleClose = () => {
+    // measure();
     setOpen(false);
   };
 
@@ -150,46 +179,124 @@ export function Combobox<T extends unknown>({
   };
 
   const renderItems = () => {
-    if (useFlatList) {
-      return (
-        <FlatList
-          data={searchedItems}
-          renderItem={({ item, index }) =>
-            renderDropdownItem({ item, key: index })
-          }
-          keyExtractor={(item, index) =>
-            item && typeof item === "object" && valueField
-              ? (item[valueField] as Key).toString()
-              : index.toString()
-          }
-          style={{ maxHeight: 200 }}
-        />
-      );
-    }
+    // if (useFlatList) {
+    //   return (
+    //     <FlatList
+    //       data={searchedItems}
+    //       renderItem={({ item, index }) =>
+    //         renderDropdownItem({ item, key: index })
+    //       }
+    //       keyExtractor={(item, index) =>
+    //         item && typeof item === "object" && valueField
+    //           ? (item[valueField] as Key).toString()
+    //           : index.toString()
+    //       }
+    //       style={{ maxHeight: 200 }}
+    //     />
+    //   );
+    // }
 
     return (
-      <ScrollView style={{ maxHeight: 200 }}>
-        {searchedItems.map((item, index) =>
+      // <ScrollView style={{ maxHeight: 200 }}>
+      //   {searchedItems.map((item, index) =>
+      //     renderDropdownItem({ item, key: index })
+      //   )}
+      // </ScrollView>
+      <FlatList
+        data={searchedItems}
+        renderItem={({ item, index }) =>
           renderDropdownItem({ item, key: index })
-        )}
-      </ScrollView>
+        }
+        keyExtractor={(item, index) =>
+          item && typeof item === "object" && valueField
+            ? (item[valueField] as Key).toString()
+            : index.toString()
+        }
+        style={{ maxHeight: 200 }}
+      />
     );
   };
 
+  const renderModal = useCallback(() => {
+    return (
+      <Modal
+        transparent
+        statusBarTranslucent
+        visible={open}
+        onRequestClose={handleClose}
+      >
+        <TouchableWithoutFeedback>
+          <View
+            style={[
+              dropdownStyle,
+              styles.dropdown,
+              {
+                marginTop: position.top,
+                marginLeft: position.left,
+                width: position.width,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.flex1,
+                {
+                  paddingTop: 5,
+                },
+              ]}
+            >
+              {renderItems()}
+              {searchedItems.length === 0 && !showItemOnNoSearch && (
+                <Pressable style={styles.item}>
+                  <Text style={[noFoundItemTextStyle]}>
+                    {noFoundItemText ? noFoundItemText : "No items found"}
+                  </Text>
+                </Pressable>
+              )}
+              {(showAlwaysNoSearchItem ||
+                (showItemOnNoSearch && debouncedSearch.length === 0)) && (
+                <Pressable
+                  style={styles.item}
+                  onPress={handleSelectedNotFoundItem}
+                >
+                  {renderNoSearchItem ? (
+                    renderNoSearchItem(search)
+                  ) : (
+                    <Text>{search}</Text>
+                  )}
+                </Pressable>
+              )}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    );
+  }, [
+    open,
+    searchedItems,
+    showItemOnNoSearch,
+    showAlwaysNoSearchItem,
+    debouncedSearch,
+    noFoundItemText,
+    noFoundItemTextStyle,
+    renderNoSearchItem,
+    position,
+  ]);
+
   return (
     <View
+      ref={containerRef}
       style={[
         styles.mainContainer,
         mainContainerStyle,
-        { position: "relative" },
-        open && Platform.OS === "ios" ? { zIndex: 1000 } : {},
+        // { position: "relative" },
+        // open && Platform.OS === "ios" ? { zIndex: 1000 } : {},
       ]}
     >
       {renderLabel
         ? renderLabel()
         : label && <Text style={[styles.label, labelStyle]}>{label}</Text>}
       <Pressable
-        ref={containerRef}
         style={[
           style,
           styles.container,
@@ -241,13 +348,13 @@ export function Combobox<T extends unknown>({
           {renderError ? renderError() : error}
         </Text>
       )}
-      {open && (
+      {/* {open && (
         <View
           style={[
             dropdownStyle,
             styles.dropdown,
             {
-              marginTop: dropdownTop + 30,
+              marginTop: dropdownTop + 5,
             },
           ]}
         >
@@ -270,7 +377,8 @@ export function Combobox<T extends unknown>({
             </Pressable>
           )}
         </View>
-      )}
+      )} */}
+      {renderModal()}
     </View>
   );
 }
