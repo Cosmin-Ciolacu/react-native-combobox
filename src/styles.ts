@@ -47,9 +47,7 @@ export const styles = StyleSheet.create({
   searchContainer: {
     padding: 10,
   },
-  search: {
-    outlineStyle: "none",
-  },
+  search: {},
 
   item: {
     padding: 10,

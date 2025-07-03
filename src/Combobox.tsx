@@ -135,7 +135,7 @@ export function Combobox<T extends unknown>({
       >
         {renderItem ? (
           renderItem({
-            item,
+            item: item as (string | number) & T,
             selected: selected === item,
           })
         ) : typeof item === "object" ? (
