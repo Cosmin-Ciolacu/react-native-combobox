@@ -25,20 +25,22 @@ export const useGetSearchItems = <T extends unknown>({
         return;
       }
 
-      const foundItems = search
-        ? items.filter((item) => {
-            if (typeof item === "object" && searchField) {
-              return (
-                item &&
-                (item[searchField as keyof T] as string)
-                  .toLowerCase()
-                  .includes(search.toLowerCase())
-              );
-            } else {
-              return item?.toString().includes(search.toLowerCase());
-            }
-          })
-        : items;
+      // ...existing code...
+      const foundItems = items.filter((item) => {
+        if (typeof item === "object" && searchField) {
+          const fieldValue = item?.[searchField as keyof T];
+          if (typeof fieldValue === "string") {
+            return fieldValue.toLowerCase().includes(search.toLowerCase());
+          }
+          return false;
+        } else {
+          return (
+            typeof item === "string" &&
+            item.toLowerCase().includes(search.toLowerCase())
+          );
+        }
+      });
+      // ...existing code...
 
       setFilteredItems(foundItems);
     } else {
