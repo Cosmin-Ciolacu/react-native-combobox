@@ -25,7 +25,6 @@ export const useGetSearchItems = <T extends unknown>({
         return;
       }
 
-      // ...existing code...
       const foundItems = items.filter((item) => {
         if (typeof item === "object" && searchField) {
           const fieldValue = item?.[searchField as keyof T];
@@ -40,7 +39,6 @@ export const useGetSearchItems = <T extends unknown>({
           );
         }
       });
-      // ...existing code...
 
       setFilteredItems(foundItems);
     } else {
