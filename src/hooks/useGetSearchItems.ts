@@ -14,32 +14,34 @@ export const useGetSearchItems = <T extends unknown>({
   const [filteredItems, setFilteredItems] = useState<T[]>(items);
 
   useEffect(() => {
-    if (onSearchCallback) {
-      const customFilteredItems = onSearchCallback(search);
-      if (customFilteredItems instanceof Promise) {
-        customFilteredItems.then(setFilteredItems);
-      } else {
-        setFilteredItems(customFilteredItems);
+    if (search && search.length > 3) {
+      if (onSearchCallback) {
+        const customFilteredItems = onSearchCallback(search);
+        if (customFilteredItems instanceof Promise) {
+          customFilteredItems.then(setFilteredItems);
+        } else {
+          setFilteredItems(customFilteredItems);
+        }
+        return;
       }
-      return;
+
+      const foundItems = search
+        ? items.filter((item) => {
+            if (typeof item === "object" && searchField) {
+              return (
+                item &&
+                (item[searchField as keyof T] as string)
+                  .toLowerCase()
+                  .includes(search.toLowerCase())
+              );
+            } else {
+              return item?.toString().includes(search.toLowerCase());
+            }
+          })
+        : items;
+
+      setFilteredItems(foundItems);
     }
-
-    const foundItems = search
-      ? items.filter((item) => {
-          if (typeof item === "object" && searchField) {
-            return (
-              item &&
-              (item[searchField as keyof T] as string)
-                .toLowerCase()
-                .includes(search.toLowerCase())
-            );
-          } else {
-            return item?.toString().includes(search.toLowerCase());
-          }
-        })
-      : items;
-
-    setFilteredItems(foundItems);
   }, [search, items, searchField]);
 
   return filteredItems;
