@@ -35,6 +35,7 @@ export function Combobox<T extends unknown>({
   showAlwaysNoSearchItem = false,
   renderNoSearchItem,
   renderSearchIcon,
+  onSearchCallback,
   onSelectedNotFoundItem,
   containerRadius,
   showBorder,
@@ -70,6 +71,7 @@ export function Combobox<T extends unknown>({
   const searchedItems = useGetSearchItems<T>({
     items,
     searchField,
+    onSearchCallback,
     search: debouncedSearch,
   });
 

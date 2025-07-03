@@ -4,14 +4,22 @@ export const useGetSearchItems = <T extends unknown>({
   items,
   search,
   searchField,
+  onSearchCallback,
 }: {
   items: T[];
   search: string;
   searchField?: string | number | symbol;
+  onSearchCallback?: (value: string) => T[];
 }): T[] => {
   const [filteredItems, setFilteredItems] = useState<T[]>(items);
 
   useEffect(() => {
+    if (onSearchCallback) {
+      const customFilteredItems = onSearchCallback(search);
+      setFilteredItems(customFilteredItems);
+      return;
+    }
+
     const foundItems = search
       ? items.filter((item) => {
           if (typeof item === "object" && searchField) {
