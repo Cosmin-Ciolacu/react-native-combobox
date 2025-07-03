@@ -41,6 +41,8 @@ export const useGetSearchItems = <T extends unknown>({
         : items;
 
       setFilteredItems(foundItems);
+    } else {
+      setFilteredItems(items);
     }
   }, [search, items, searchField]);
 
