@@ -9,14 +9,18 @@ export const useGetSearchItems = <T extends unknown>({
   items: T[];
   search: string;
   searchField?: string | number | symbol;
-  onSearchCallback?: (value: string) => T[];
+  onSearchCallback?: (value: string) => T[] | Promise<T[]>;
 }): T[] => {
   const [filteredItems, setFilteredItems] = useState<T[]>(items);
 
   useEffect(() => {
     if (onSearchCallback) {
       const customFilteredItems = onSearchCallback(search);
-      setFilteredItems(customFilteredItems);
+      if (customFilteredItems instanceof Promise) {
+        customFilteredItems.then(setFilteredItems);
+      } else {
+        setFilteredItems(customFilteredItems);
+      }
       return;
     }
 

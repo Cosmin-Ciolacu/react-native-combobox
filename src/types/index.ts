@@ -63,7 +63,7 @@ type SearchableComboboxProps<T> =
       renderNoSearchItem?: (value: string) => React.ReactNode;
       onSelectedNotFoundItem?: (value: string) => void;
       debounceDelay?: number;
-      onSearchCallback?: (value: string) => T[];
+      onSearchCallback?: (value: string) => T[] | Promise<T[]>;
     }
   | {
       searchable: false;
